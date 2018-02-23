@@ -13,7 +13,7 @@ restService.use(
 
 restService.use(bodyParser.json());
 
-restService.post("/echo", function(req, res) {
+restService.post("/turbo", function(req, res) {
   var speech =
     req.body.result &&
     req.body.result.parameters &&

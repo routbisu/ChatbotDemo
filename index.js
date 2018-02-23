@@ -1,19 +1,34 @@
+// =================================================================================
+// Dialogflow Chatbot Webhook - Base Setup
+// Author  : Biswaranjan Rout
+// Date    : 20-Feb-2018
+// =================================================================================
 "use strict";
 
-const express = require("express");
-const bodyParser = require("body-parser");
+// Node Modules
+const express       = require('express');
+const bodyParser    = require('body-parser');
+const morgan        = require('morgan');
+const path          = require('path');
+const nodeRest      = require('node-rest-client').Client;
 
-const restService = express();
+// Get port number
+const port = process.env.PORT || 5000;
 
-restService.use(
-  bodyParser.urlencoded({
-    extended: true
-  })
-);
+// Instantiate node modules
+const app               = express();
+const nodeRestClient    = new nodeRest();
 
-restService.use(bodyParser.json());
+// Configure body parser
+app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.json());
+app.use(morgan('dev'));
 
-restService.post("/turbo", function(req, res) {
+// CORS Enable all origins
+app.use(enableCORS);
+
+// Main Controller
+app.post("/turbo", function(req, res) {
   console.log(req.body.result.parameters.Name);
   var speech =
     req.body.result &&
@@ -28,7 +43,7 @@ restService.post("/turbo", function(req, res) {
   });
 });
 
-restService.listen(process.env.PORT || 8000, function() {
-    console.log("Server up and listening");
+app.listen(port, function() {
+  console.log("Server started at port: ", port);
 });
   

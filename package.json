@@ -1,14 +1,16 @@
 {
-    "name": "turbo-dialogflow-demo",
-    "version": "1.0.0",
-    "description": "Turbo Dialogflow Demo",
-    "main": "index.js",
-    "scripts": {
-      "start": "node index.js"
-    },
-    "author": "Biswaranjan Rout",
-    "dependencies": {
-      "body-parser": "^1.15.0",
-      "express": "^4.13.4"
-    }
+  "name": "turbo-dialogflow-demo",
+  "version": "1.0.0",
+  "description": "Turbo Dialogflow Demo",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "author": "Biswaranjan Rout",
+  "dependencies": {
+    "body-parser": "^1.15.0",
+    "express": "^4.13.4",
+    "moment": "^2.20.1",
+    "node-rest-client": "^3.1.0"
   }
+}

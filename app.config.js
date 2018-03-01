@@ -2,19 +2,26 @@
  * Contains all the configuration
  *********************************************************************/
 
-// Log errors in file system
-const logInfo = {
-    LogLocation : './logs/'
-};
+module.exports = {
+    // Logger options
+    loggerOptions: {
+        timeZone: 'Asia/Kolkata',
+        folderPath: './logs/',      
+        dateBasedFileNaming: true,
+        dateFormat: 'YYYY-MM-DD',
+        timeFormat: 'HH:mm:ss.SSS',
+        logLevel: 'debug',
+        onlyFileLogging: false
+    },
 
-const paymentAPI = {
-    BaseURL: ''
-};
+    // Port number
+    portNumber: 5000,
 
-// Exported configuration object
-const appConfig = {
-    LogInfo: logInfo,
-    PaymentAPI: paymentAPI
-};
+    // PaymentAPI
+    paymentAPI: {
+        BaseURL: ''
+    },
 
-module.exports = appConfig;
+    // Response source
+    responseSource: 'webhook-turbo-chat'
+}

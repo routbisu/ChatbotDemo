@@ -41,7 +41,14 @@ try {
   app.post("/turbo", function(req, res) {
     // Capture params
     let params = req && req.body && req.body.result && req.body.result.parameters;
-    commonServices.SendResponse(res, 'This is a standard response');
+    if(params) {
+      // Call Turbo Payment
+      commonServices.SendResponse(res, 'This is a standard response');
+    } else {
+      //log.Warn('Invalid params passed to webhook', 'Index', 'Main Webhook Controller', req);
+      commonServices.SendResponse(res, 'This is a standard response');
+    }
+    
   });
 
   app.listen(port, function() {

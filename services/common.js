@@ -10,7 +10,14 @@ module.exports = {
         return res.json({
             speech: speech,
             displayText: displayText || speech,
-            source: config.responseSource
+            source: config.responseSource,
+            contextOut: [{
+                name: "ServerOTP", 
+                lifespan: 2, 
+                parameters: {
+                    ServerOTP: "OTP1" 
+                }
+            }]
         });
     }
 

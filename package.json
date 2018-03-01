@@ -11,7 +11,8 @@
     "body-parser": "^1.15.0",
     "express": "^4.13.4",
     "moment": "^2.20.1",
-    "node-file-logger": "^0.9.4",
-    "node-rest-client": "^3.1.0"
+    "node-file-logger": "^0.9.5",
+    "node-rest-client": "^3.1.0",
+    "node-stringify": "^0.2.1"
   }
 }

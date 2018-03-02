@@ -102,13 +102,6 @@ module.exports = {
                                     }
                                 ];
 
-                                let followupEvent = {
-                                    name: 'verifyotp',
-                                    data: {
-                                        serverotp: data.EncryptedOTP 
-                                    }
-                                };
-
                                 commonServices.SendResponse(res, otpEmailed, contextOut, followupEvent);
                             
                             } else {

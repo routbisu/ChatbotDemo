@@ -94,7 +94,7 @@ module.exports = {
                                 let contextOut = [
                                     {
                                         name: "otp", 
-                                        lifespan: 2, 
+                                        lifespan: 4, 
                                         parameters : 
                                         { 
                                             serverotp: data.EncryptedOTP 
@@ -102,7 +102,14 @@ module.exports = {
                                     }
                                 ];
 
-                                commonServices.SendResponse(res, otpEmailed, contextOut);
+                                let followupEvent = {
+                                    name: 'verifyotp',
+                                    data: {
+                                        serverotp: data.EncryptedOTP 
+                                    }
+                                };
+
+                                commonServices.SendResponse(res, otpEmailed, contextOut, followupEvent);
                             
                             } else {
                                 commonServices.SendResponse(res, policyNotFound);

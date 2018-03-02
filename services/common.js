@@ -11,7 +11,7 @@ module.exports = {
      * @param {*} contextOut Out context (default = null)
      * @param {*} displayText Display text (default = speech)
      */
-    SendResponse(res, speech, contextOut = null, displayText) {
+    SendResponse(res, speech, contextOut = null, followupEvent = null, displayText) {
         let response = {
             speech: speech,
             displayText: displayText || speech,
@@ -19,6 +19,7 @@ module.exports = {
         };
 
         if(contextOut) response.contextOut = contextOut;
+        if(followupEvent) response.followupEvent = followupEvent;
 
         return res.json(response);
     }

@@ -97,14 +97,6 @@ module.exports = {
                                         { 
                                             serverotp: data.EncryptedOTP 
                                         }
-                                    },
-                                    {
-                                        name: "policynumber", 
-                                        lifespan: 500, 
-                                        parameters : 
-                                        { 
-                                            policynumber: args.data.PolicyNumber 
-                                        }
                                     }
                                 ];
 

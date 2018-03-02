@@ -22,40 +22,7 @@ module.exports = {
         let wrongOtp = 'The password you entered is incorrect. Please enter again.';
 
         if(params['policynumber']) {
-            // let url = turboAPIBaseURL + 'Chatbot/GetPolicyDetails?PolicyNumber=' 
-            //     + params['policynumber'];
 
-            // nodeRestClient.get(url, function (data, response) {
-
-            //     if(data) {
-            //         log.Debug(data);
-            //         if(data.Error == 0) {
-            //             let customerName = false;
-
-            //             if(data.CustomerContactDetails) {
-            //                 customerName = data.CustomerContactDetails.FirstName + ' ' 
-            //                     + data.CustomerContactDetails.LastName;
-            //             } 
-
-            //             let speech;
-
-            //             if(data.CustomerID) {
-            //                 speech = data.ProductType + ' Policy ' + data.PolicyNumber + ' with Insured name ' 
-            //                     + customerName + ' is valid till ' + data.PolicyEndDate + ' with total premium $' 
-            //                     + data.TotalPremium ;
-            //             } else {
-            //                 speech = policyNotFound;
-            //             }                       
-
-            //             commonServices.SendResponse(res, speech);
-
-            //         } else {
-            //             commonServices.SendResponse(res, policyNotFound);
-            //         }
-            //     } else {
-            //         commonServices.SendResponse(res, policyNotFound);               
-            //     }
-            // });
             let url = turboAPIBaseURL + 'Chatbot/GetCustomerDetails?PolicyNumber=' 
                 + params['policynumber'];
 
@@ -152,7 +119,49 @@ module.exports = {
             }
 
             if(otpContext.parameters.serverotp.toLowerCase() === params['userotp'].toLowerCase()) {
-                commonServices.SendResponse(res, correctOtp);
+                //commonServices.SendResponse(res, correctOtp);
+
+                // Get Policy information
+                let policyInfo;
+                for(i = 0; i < contexts.length; i++) {
+                    if(contexts[i].name == "policyinfo") {
+                        policyInfo = contexts[i];
+                        break;
+                    }
+                }
+
+                let policyNumber = policyInfo.parameters.policynumber;
+                let url = turboAPIBaseURL + 'Chatbot/GetPolicyDetails?PolicyNumber=' + policyNumber;
+                nodeRestClient.get(url, function (data, response) {
+                    if(data) {
+                        log.Debug(data);
+                        if(data.Error == 0) {
+                            let customerName = false;            
+                            if(data.CustomerContactDetails) {
+                                customerName = data.CustomerContactDetails.FirstName + ' ' 
+                                    + data.CustomerContactDetails.LastName;
+                            } 
+            
+                            let speech;
+            
+                            if(data.CustomerID) {
+                                speech = data.ProductType + ' Policy ' + data.PolicyNumber + ' with Insured name ' 
+                                    + customerName + ' is valid till ' + data.PolicyEndDate + ' with total premium $' 
+                                    + data.TotalPremium ;
+                            } else {
+                                speech = policyNotFound;
+                            }                       
+    
+                            commonServices.SendResponse(res, speech);
+    
+                        } else {
+                            commonServices.SendResponse(res, policyNotFound);
+                        }
+                    } else {
+                        commonServices.SendResponse(res, policyNotFound);               
+                    }
+                });
+
             } else {
                 commonServices.SendResponse(res, wrongOtp);
             }

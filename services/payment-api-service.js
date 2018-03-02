@@ -17,7 +17,7 @@ module.exports = {
         // Default speech.
         let defaultSpeech = 'I am not able to find the information currently. Please try again.';
         let policyNotFound = 'I was not able to find any data for this policy number. Please try again.';
-        let otpEmailed = 'Please enter the one time password emailed to you.';
+        let otpEmailed = 'Please enter the one time password emailed to you at: ';
         let correctOtp = 'Your OTP has been verified.';
         let wrongOtp = 'The password you entered is incorrect. Please enter again.';
 
@@ -69,7 +69,8 @@ module.exports = {
                                     }
                                 ];
 
-                                commonServices.SendResponse(res, otpEmailed, contextOut);
+                                let speech = otpEmailed + args.data.Email;
+                                commonServices.SendResponse(res, speech, contextOut);
                             
                             } else {
 

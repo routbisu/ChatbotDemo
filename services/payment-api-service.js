@@ -28,16 +28,18 @@ module.exports = {
                     log.Info(data);
                     if(data.Error == 0) {
                         let customerName = false;
+
                         if(data.CustomerContactDetails) {
-                            customerName = data.CustomerContactDetails.FirstName;
+                            customerName = data.CustomerContactDetails.FirstName + ' ' 
+                                + data.CustomerContactDetails.LastName;
                         } 
 
                         let speech;
 
                         if(data.CustomerID) {
-                            speech = customerName ? ('Hi ' + customerName + '.') : '';
-                            speech += data.ProductType = ' Policy ' + data.PolicyNumber + ' is valid till ' 
-                                + data.PolicyEndDate + ' with total premium $' + data.TotalPremium; 
+                            speech = data.ProductType + ' Policy ' + data.PolicyNumber + ' with Insured name ' 
+                                + customerName + ' is valid till ' + data.PolicyEndDate + ' with total premium $' 
+                                + data.TotalPremium ;
                         } else {
                             speech = policyNotFound;
                         }                       

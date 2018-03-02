@@ -17,6 +17,7 @@ const config = require('./app.config');
 
 // Get services
 const commonServices = require('./services/common');
+const paymentService = require('./services/payment-api-service');
 const enableCORS = require('./middlewares/enable-cors');
 
 // Get port number
@@ -43,10 +44,13 @@ try {
     let params = req && req.body && req.body.result && req.body.result.parameters;
     if(params) {
       // Call Turbo Payment
-      commonServices.SendResponse(res, 'This is a standard response');
+      paymentService.ProcessRequest(res, params);
+
+      //commonServices.SendResponse(res, 'This is a standard response');
     } else {
       //log.Warn('Invalid params passed to webhook', 'Index', 'Main Webhook Controller', req);
-      commonServices.SendResponse(res, 'This is a standard response');
+      commonServices.SendResponse(res, 'There was an unexpected error');
+      log.Error('Invalid parameters passed to webhook', 'Index', 'Main');
     }
     
   });

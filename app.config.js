@@ -19,7 +19,7 @@ module.exports = {
 
     // PaymentAPI
     paymentAPI: {
-        BaseURL: ''
+        BaseURL: 'http://52.187.24.61:8081/api/'
     },
 
     // Response source

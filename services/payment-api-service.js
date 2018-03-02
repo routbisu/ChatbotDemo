@@ -12,12 +12,14 @@ module.exports = {
     /**
      * @param {*} params params sent from dialog flow
      */
-    ProcessRequest: function(res, params) {
+    ProcessRequest: function(res, params, contexts) {
 
         // Default speech.
         let defaultSpeech = 'I am not able to find the information currently. Please try again.';
         let policyNotFound = 'I was not able to find any data for this policy number. Please try again.';
         let otpEmailed = 'Please enter the one time password emailed to you.';
+        let correctOtp = 'Your OTP has been verified.';
+        let wrongOtp = 'The password you entered is incorrect. Please enter again.';
 
         if(params['policynumber']) {
             // let url = turboAPIBaseURL + 'Chatbot/GetPolicyDetails?PolicyNumber=' 
@@ -114,7 +116,25 @@ module.exports = {
                 }
             });
 
-        } else {
+        } 
+        else if(params['userotp']) {
+            // Find OTP context
+            let otpContext = null;
+
+            for(i = 0; i < contexts.length; i++) {
+                if(contexts[i].name == "otp") {
+                    otpContext = contexts[i];
+                    break;
+                }
+            }
+
+            if(otpContext.parameters.serverotp.toLowerCase() === params['userotp'].toLowerCase()) {
+                commonServices.SendResponse(res, correctOtp);
+            } else {
+                commonServices.SendResponse(res, wrongOtp);
+            }
+        }
+        else {
             commonServices.SendResponse(res, defaultSpeech);
         }
     }

@@ -42,9 +42,11 @@ try {
   app.post("/turbo", function(req, res) {
     // Capture params
     let params = req && req.body && req.body.result && req.body.result.parameters;
+    let contexts = req && req.body && req.body.result && req.body.result.contexts;
+
     if(params) {
       // Call Turbo Payment
-      paymentService.ProcessRequest(res, params);
+      paymentService.ProcessRequest(res, params, contexts);
 
       //commonServices.SendResponse(res, 'This is a standard response');
     } else {

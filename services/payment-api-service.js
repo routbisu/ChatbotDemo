@@ -102,14 +102,14 @@ module.exports = {
                                     }
                                 ];
 
-                                let followupEvent = {
-                                    name: 'verifyotp',
-                                    data: {
-                                        serverotp: data.EncryptedOTP 
-                                    }
-                                };
+                                // let followupEvent = {
+                                //     name: 'verifyotp',
+                                //     data: {
+                                //         serverotp: data.EncryptedOTP 
+                                //     }
+                                // };
 
-                                commonServices.SendResponse(res, otpEmailed, contextOut, followupEvent);
+                                commonServices.SendResponse(res, otpEmailed, contextOut);
                             
                             } else {
                                 commonServices.SendResponse(res, policyNotFound);

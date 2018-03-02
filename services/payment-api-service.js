@@ -102,7 +102,7 @@ module.exports = {
                                     }
                                 ];
 
-                                commonServices.SendResponse(res, otpEmailed, contextOut, followupEvent);
+                                commonServices.SendResponse(res, otpEmailed, contextOut);
                             
                             } else {
 

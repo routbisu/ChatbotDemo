@@ -102,24 +102,47 @@ module.exports = {
                                     }
                                 ];
 
-                                // let followupEvent = {
-                                //     name: 'verifyotp',
-                                //     data: {
-                                //         serverotp: data.EncryptedOTP 
-                                //     }
-                                // };
+                                let followupEvent = {
+                                    name: 'verifyotp',
+                                    data: {
+                                        serverotp: data.EncryptedOTP 
+                                    }
+                                };
 
-                                commonServices.SendResponse(res, otpEmailed, contextOut);
+                                commonServices.SendResponse(res, otpEmailed, contextOut, followupEvent);
                             
                             } else {
-                                commonServices.SendResponse(res, policyNotFound);
+
+                                let followupEvent = {
+                                    name: 'askpolicynumber',
+                                    data: {
+                                        serverotp: data.EncryptedOTP 
+                                    }
+                                };
+
+                                commonServices.SendResponse(res, policyNotFound, null, followupEvent);
                             }
                         } else {
-                            commonServices.SendResponse(res, policyNotFound);
+
+                            let followupEvent = {
+                                name: 'askpolicynumber',
+                                data: {
+                                    serverotp: data.EncryptedOTP 
+                                }
+                            };
+
+                            commonServices.SendResponse(res, policyNotFound, null, followupEvent);
                         }
                     });
                 } else {
-                    commonServices.SendResponse(res, policyNotFound);
+                    let followupEvent = {
+                        name: 'askpolicynumber',
+                        data: {
+                            serverotp: data.EncryptedOTP 
+                        }
+                    };
+
+                    commonServices.SendResponse(res, policyNotFound, null, followupEvent);
                 }
             });
 

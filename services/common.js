@@ -37,7 +37,7 @@ module.exports = {
                 if(result.contexts[i].name == 'sessioninfo') {
                     let context = result.contexts[i];
                     if(context.parameters) {
-                        if(context.parameters.policynumber) {
+                        if(context.parameters.sessionPolicyNumber) {
                             sessionPolicyNumber = context.parameters.sessionPolicyNumber;
                             break;
                         }

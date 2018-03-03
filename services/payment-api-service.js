@@ -325,7 +325,7 @@ module.exports = {
                 // User is already logged in
                 if(sessionPolicyNumber) {
                     // Fetch policy details for user
-                    let url = turboAPIBaseURL + 'Chatbot/GetPolicyDetails?PolicyNumber=' + policyNumber;
+                    let url = turboAPIBaseURL + 'Chatbot/GetPolicyDetails?PolicyNumber=' + sessionPolicyNumber;
                     nodeRestClient.get(url, function (data, response) {
                         if(data) {
                             log.Debug(data);

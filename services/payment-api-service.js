@@ -281,11 +281,11 @@ module.exports = {
     
                             let contextOut = [
                                 {
-                                    name: "sessionInfo", 
+                                    name: "sessioninfo", 
                                     lifespan: 500, 
                                     parameters : 
                                     { 
-                                        sessionPolicyNumber: otpContext.policynumber
+                                        sessionPolicyNumber: otpContext.parameters.policynumber
                                     }
                                 },
                             ]

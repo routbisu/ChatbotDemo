@@ -265,14 +265,18 @@ module.exports = {
                     });
         
                 } 
-                else if(params['userotp']) {
+                
+            } 
+
+            if(result.action == 'authenticate.verifyotp') {
+                if(params['userotp']) {
                     // Find OTP context
                     let contextName = commonServices.FindContext(result, 'otp');
         
                     // If OTP matches with the one entered by user
                     if(contextName) {
                         if(otpContext.parameters.serverotp.toLowerCase() === params['userotp'].toLowerCase()) {
-
+    
                             let contextOut = [
                                 {
                                     name: "sessionInfo", 
@@ -283,7 +287,7 @@ module.exports = {
                                     }
                                 },
                             ]
-
+    
                             // Check last event details
                             let lastEventContext = commonServices.FindContext(result, 'lastevent');
                             if(lastEventContext) {
@@ -291,7 +295,7 @@ module.exports = {
                                 let followupEvent = {
                                     name: lastEventContext.parameters.eventname
                                 };
-
+    
                                 
         
                                 commonServices.SendResponse(res, '', contextOut, followupEvent);
@@ -304,11 +308,13 @@ module.exports = {
                         let followupEvent = {
                             name: 'authenticate'
                         };
-
+    
                         commonServices.SendResponse(res, '', null, followupEvent);
                     }
                 }
-            } 
+            }
+            
+
             // Policydetails action
             else if(result.action == 'getpolicydetails') {
 

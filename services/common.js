@@ -22,6 +22,51 @@ module.exports = {
         if(followupEvent) response.followupEvent = followupEvent;
 
         return res.json(response);
+    },
+
+    /**
+     * Check if user is already logged in
+     * @param {*} result 
+     */
+    FindSessionPolicyNumber(result) {
+        // Find a context called sessionInfo to check if policy number is already provided
+        let sessionPolicyNumber = null;
+
+        if(result.contexts) {
+            for(i = 0; i < result.contexts.length; i++) {
+                if(result.contexts[i].name == 'sessionInfo') {
+                    let context = result.contexts[i];
+                    if(context.parameters) {
+                        if(context.parameters.policyNumber) {
+                            sessionPolicyNumber = context.parameters.policyNumber;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        return sessionPolicyNumber;
+    },
+
+    /**
+     * Find context object with a context name
+     * @param {*} result 
+     * @param {*} contextName 
+     */
+    FindContext(result, contextName) {
+        let context = null;
+
+        if(result.contexts) {
+            for(i = 0; i < result.contexts.length; i++) {
+                if(result.contexts[i].name == contextName) {
+                    let context = result.contexts[i];
+                    break;
+                }
+            }
+        }
+
+        return context;
     }
 
 }

@@ -268,7 +268,7 @@ module.exports = {
                 
             } 
 
-            if(result.action == 'authenticate.verifyotp') {
+            else if(result.action == 'authenticate.verifyotp') {
                 if(params['userotp']) {
                     // Find OTP context
                     let contextName = commonServices.FindContext(result, 'otp');

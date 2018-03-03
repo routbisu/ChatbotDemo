@@ -43,11 +43,14 @@ try {
     // Capture params
     let params = req && req.body && req.body.result && req.body.result.parameters;
     let contexts = req && req.body && req.body.result && req.body.result.contexts;
+    let result = req && req.body && req.body.result;
 
-    if(params) {
-      // Call Turbo Payment
-      paymentService.ProcessRequest(res, params, contexts);
-
+    // if(params) {
+    //   // Call Turbo Payment
+    //   paymentService.ProcessRequest(res, params, contexts);
+    if(result) {
+      paymentService.ProcessRequestNew(res, result)
+    
       //commonServices.SendResponse(res, 'This is a standard response');
     } else {
       //log.Warn('Invalid params passed to webhook', 'Index', 'Main Webhook Controller', req);

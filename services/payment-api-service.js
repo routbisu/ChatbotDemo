@@ -61,7 +61,7 @@ module.exports = {
                                 let contextOut = [
                                     {
                                         name: "otp", 
-                                        lifespan: 4, 
+                                        lifespan: 500, 
                                         parameters : 
                                         { 
                                             serverotp: data.EncryptedOTP 
@@ -170,5 +170,37 @@ module.exports = {
         else {
             commonServices.SendResponse(res, defaultSpeech);
         }
+    },
+
+    ProcessRequestNew: function(res, result) {
+
+        let speech = {
+            default: 'I am not able to find the information currently. Please try again.',
+            policyNotFound: 'I was not able to find any data for this policy number. Please try again.',
+            otpMailed: 'Please enter the one time password emailed to you at: ',
+            correctOtp: 'Your OTP has been verified.',
+            wrongOtp: 'The password you entered is incorrect. Please enter again.'
+        };
+
+        if(result) {
+            // Authentication action
+            if(result.action == 'authentication') {
+
+            } else if(result.action == 'getpolicydetails') {
+                let followupEvent = {
+                    name: 'authenticate',
+                    data: {
+                        policynumber: 'POLICYNUMBER' 
+                    }
+                };
+
+                commonServices.SendResponse(res, 'Result of policydetails', null, followupEvent);
+            } else {
+                commonServices.SendResponse(res, speech.default);
+            }
+        } else {
+            commonServices.SendResponse(res, speech.default);
+        }
     }
+
 }

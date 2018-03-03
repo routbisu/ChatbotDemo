@@ -186,8 +186,10 @@ module.exports = {
 
         if(result) {
             // Authentication action
+            let params = result.parameters;
+
             if(result.action == 'authenticate') {
-                let params = result.parameters;
+                
 
                 // Check policy number
                 if(params['policynumber']) {
@@ -271,10 +273,10 @@ module.exports = {
             else if(result.action == 'authenticate.verifyotp') {
                 if(params['userotp']) {
                     // Find OTP context
-                    let contextName = commonServices.FindContext(result, 'otp');
+                    let otpContext = commonServices.FindContext(result, 'otp');
         
                     // If OTP matches with the one entered by user
-                    if(contextName) {
+                    if(otpContext) {
                         if(otpContext.parameters.serverotp.toLowerCase() === params['userotp'].toLowerCase()) {
     
                             let contextOut = [

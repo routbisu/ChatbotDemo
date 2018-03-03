@@ -60,7 +60,7 @@ module.exports = {
         if(result.contexts) {
             for(i = 0; i < result.contexts.length; i++) {
                 if(result.contexts[i].name == contextName) {
-                    let context = result.contexts[i];
+                    context = result.contexts[i];
                     break;
                 }
             }

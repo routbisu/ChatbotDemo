@@ -186,7 +186,8 @@ module.exports = {
 
         if(result) {
             // Authentication action
-            if(result.action == 'authentication') {
+            if(result.action == 'authenticate') {
+                let params = result.parameters;
 
                 // Check policy number
                 if(params['policynumber']) {
@@ -239,7 +240,7 @@ module.exports = {
                                             }
                                         ];
         
-                                        let speech = otpEmailed + args.data.Email;
+                                        let speech = SPEECH.otpEmailed + args.data.Email;
                                         commonServices.SendResponse(res, speech, contextOut);
                                     
                                     } else {

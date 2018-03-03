@@ -240,7 +240,7 @@ module.exports = {
                                             }
                                         ];
         
-                                        let speech = SPEECH.otpEmailed + args.data.Email;
+                                        let speech = SPEECH.otpMailed + args.data.Email;
                                         commonServices.SendResponse(res, speech, contextOut);
                                     
                                     } else {

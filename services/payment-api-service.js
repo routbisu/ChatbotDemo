@@ -352,10 +352,7 @@ module.exports = {
                 else  {
                     // Send user back to authentication intent
                     let followupEvent = {
-                        name: 'authenticate',
-                        data: {
-                            policynumber: 'POLICYNUMBER' 
-                        }
+                        name: 'authenticate'
                     };
 
                     // Send last event details

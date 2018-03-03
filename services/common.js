@@ -38,7 +38,7 @@ module.exports = {
                     let context = result.contexts[i];
                     if(context.parameters) {
                         if(context.parameters.policynumber) {
-                            sessionPolicyNumber = context.parameters.policynumber;
+                            sessionPolicyNumber = context.parameters.sessionPolicyNumber;
                             break;
                         }
                     }

@@ -236,7 +236,7 @@ module.exports = {
                                 let speech;
 
                                 if(data.TotalPaid) {
-                                    speech = 'The total premium for policy number' + sessionPolicyNumber + ' paid till now is $' + data.TotalPaid;
+                                    speech = 'The total premium for policy number ' + sessionPolicyNumber + ' paid till now is $' + data.TotalPaid;
                                 } else {
                                     speech = 'The total paid amount was not found. Please try again later.';
                                 }
@@ -288,7 +288,7 @@ module.exports = {
                                 let speech;
 
                                 if(data.PolicyEndDate) {
-                                    speech = 'The policy end date for' + sessionPolicyNumber + ' is ' + data.PolicyEndDate;
+                                    speech = 'The policy end date for ' + sessionPolicyNumber + ' is ' + data.PolicyEndDate;
                                 } else {
                                     speech = 'The end date was not found. Please try again later.';
                                 }

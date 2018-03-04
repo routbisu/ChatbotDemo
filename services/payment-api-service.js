@@ -161,7 +161,18 @@ module.exports = {
                 let userPolicyNumber = result.parameters && result.parameters.pnumgetpolicydetails;
 
                 // User is already logged in
-                if(sessionPolicyNumber && (sessionPolicyNumber != userPolicyNumber)) {
+                if(sessionPolicyNumber) {
+
+                    // If user wants details on another policy number
+                    // send them back to authentication screen
+                    if(userPolicyNumber) {
+                        if(sessionPolicyNumber != userPolicyNumber) {
+                            // Send user back to authentication intent
+                            commonServices.SendToAuthentication(res, userPolicyNumber, 'getpolicydetails');
+                            return;
+                        }
+                    }
+                    
                     // Fetch policy details for user
                     let url = turboAPIBaseURL + 'Chatbot/GetPolicyDetails?PolicyNumber=' + sessionPolicyNumber;
                     nodeRestClient.get(url, function (data, response) {
@@ -197,29 +208,7 @@ module.exports = {
                 // User is not yet logged in 
                 else  {
                     // Send user back to authentication intent
-                    let followupEvent = {
-                        name: 'authenticate'
-                    };
-
-                    if(userPolicyNumber) {
-                        followupEvent.data = {
-                            policynumber: userPolicyNumber
-                        }
-                    }
-
-                    // Send last event details
-                    let contextOut = [
-                        {
-                            name: "lastevent", 
-                            lifespan: 500, 
-                            parameters : 
-                            { 
-                                eventname: 'getpolicydetails'
-                            }
-                        }
-                    ];
-
-                    commonServices.SendResponse(res, '', contextOut, followupEvent);
+                    commonServices.SendToAuthentication(res, userPolicyNumber, 'getpolicydetails');
                 }
 
             } else if(result.action == 'get') {

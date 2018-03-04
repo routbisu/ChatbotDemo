@@ -67,6 +67,39 @@ module.exports = {
         }
 
         return context;
+    },
+
+    /**
+     * 
+     * @param {*} res 
+     * @param {*} userPolicyNumber Policy number entered by user
+     * @param {*} lastEvent Name of the last event
+     */
+    SendToAuthentication(res, userPolicyNumber, lastEvent) {
+        // Send user back to authentication intent
+        let followupEvent = {
+            name: 'authenticate'
+        };
+
+        if(userPolicyNumber) {
+            followupEvent.data = {
+                policynumber: userPolicyNumber
+            }
+        }
+
+        // Send last event details
+        let contextOut = [
+            {
+                name: "lastevent", 
+                lifespan: 500, 
+                parameters : 
+                { 
+                    eventname: lastEvent
+                }
+            }
+        ];
+
+        commonServices.SendResponse(res, '', contextOut, followupEvent);
     }
 
 }

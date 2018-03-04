@@ -152,7 +152,7 @@ module.exports = {
             else if(result.action == 'getpolicydetails') {
 
                 let sessionPolicyNumber = commonServices.FindSessionPolicyNumber(result);
-                let userPolicyNumber = result.parameters && result.parameters.pnumgetpolicydetails;
+                let userPolicyNumber = result.parameters && result.parameters.policynumber;
 
                 // User is already logged in
                 if(sessionPolicyNumber) {
@@ -207,10 +207,110 @@ module.exports = {
                     commonServices.SendToAuthentication(res, userPolicyNumber, 'getpolicydetails');
                 }
 
-            } else if(result.action == 'getlastinstalment') {
-                commonServices.SendResponse(res, SPEECH.default);
-            } else if(result.action == 'getpolicystartdate') {
-                commonServices.SendResponse(res, SPEECH.default);
+            } else if(result.action == 'gettotalpaid') {
+                
+                // Get details of last instalment 
+                let sessionPolicyNumber = commonServices.FindSessionPolicyNumber(result);
+                let userPolicyNumber = result.parameters && result.parameters.policynumber;
+
+                // User is already logged in
+                if(sessionPolicyNumber) {
+
+                    // If user wants details on another policy number
+                    // send them back to authentication screen
+                    if(userPolicyNumber) {
+                        if(sessionPolicyNumber != userPolicyNumber) {
+                            // Send user back to authentication intent
+                            commonServices.SendToAuthentication(res, userPolicyNumber, 'gettotalpaid');
+                            return;
+                        }
+                    }
+                    
+                    // Fetch policy details for user
+                    let url = turboAPIBaseURL + 'Chatbot/GetPolicyDetails?PolicyNumber=' + sessionPolicyNumber;
+                    nodeRestClient.get(url, function (data, response) {
+                        if(data) {
+                            log.Debug(data);
+                            if(data.Error == 0) {
+                                
+                                let speech;
+
+                                if(data.TotalPaid) {
+                                    speech = 'The total premium you have paid till now is $' + data.TotalPaid;
+                                } else {
+                                    speech = 'The total paid amount was not found. Please try again later.';
+                                }
+
+                                commonServices.SendResponse(res, speech);
+
+                            } else {
+                                // Send user back to authentication intent
+                                commonServices.SendResponse(res, '', null, { name: 'reauthenticate'});
+                            }
+                        } else {
+                            // Send user back to authentication intent
+                            commonServices.SendResponse(res, '', null, { name: 'reauthenticate'});               
+                        }
+                    });            
+                }
+                // User is not yet logged in 
+                else  {
+                    // Send user back to authentication intent
+                    commonServices.SendToAuthentication(res, userPolicyNumber, 'getpolicydetails');
+                }
+
+            } else if(result.action == 'getpolicyenddate') {
+
+                // Get details of last instalment 
+                let sessionPolicyNumber = commonServices.FindSessionPolicyNumber(result);
+                let userPolicyNumber = result.parameters && result.parameters.policynumber;
+
+                // User is already logged in
+                if(sessionPolicyNumber) {
+
+                    // If user wants details on another policy number
+                    // send them back to authentication screen
+                    if(userPolicyNumber) {
+                        if(sessionPolicyNumber != userPolicyNumber) {
+                            // Send user back to authentication intent
+                            commonServices.SendToAuthentication(res, userPolicyNumber, 'getpolicyenddate');
+                            return;
+                        }
+                    }
+                    
+                    // Fetch policy details for user
+                    let url = turboAPIBaseURL + 'Chatbot/GetPolicyDetails?PolicyNumber=' + sessionPolicyNumber;
+                    nodeRestClient.get(url, function (data, response) {
+                        if(data) {
+                            log.Debug(data);
+                            if(data.Error == 0) {
+                                
+                                let speech;
+
+                                if(data.PolicyEndDate) {
+                                    speech = 'Your policy end date is ' + data.PolicyEndDate;
+                                } else {
+                                    speech = 'The end date was not found. Please try again later.';
+                                }
+        
+                                commonServices.SendResponse(res, speech);
+        
+                            } else {
+                                // Send user back to authentication intent
+                                commonServices.SendResponse(res, '', null, { name: 'reauthenticate'});
+                            }
+                        } else {
+                            // Send user back to authentication intent
+                            commonServices.SendResponse(res, '', null, { name: 'reauthenticate'});               
+                        }
+                    });            
+                }
+                // User is not yet logged in 
+                else  {
+                    // Send user back to authentication intent
+                    commonServices.SendToAuthentication(res, userPolicyNumber, 'getpolicydetails');
+                }
+
             } else {
                 commonServices.SendResponse(res, SPEECH.default);
             }

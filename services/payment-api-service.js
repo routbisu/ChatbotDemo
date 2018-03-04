@@ -25,7 +25,7 @@ module.exports = {
             // Authentication action
             let params = result.parameters;
 
-            if(result.action == 'authenticate') {
+            if(result.action == 'authenticate' || result.action == 'reauthenticate') {
                 
 
                 // Check policy number
@@ -96,7 +96,7 @@ module.exports = {
                         } else {
                             // Incorrect policy number, please try again
                             let followupEvent = {
-                                name: 'reauthentication'
+                                name: 'reauthenticate'
                             };
         
                             commonServices.SendResponse(res, '', null, followupEvent);
@@ -107,7 +107,7 @@ module.exports = {
                 
             } 
 
-            else if(result.action == 'authenticate.verifyotp') {
+            else if(result.action == 'authenticate.verifyotp' || result.action == 'reauthenticate.verifyotp') {
                 if(params['userotp']) {
                     // Find OTP context
                     let otpContext = commonServices.FindContext(result, 'otp');
@@ -134,9 +134,7 @@ module.exports = {
                                 let followupEvent = {
                                     name: lastEventContext.parameters.eventname
                                 };
-    
                                 
-        
                                 commonServices.SendResponse(res, '', contextOut, followupEvent);
                             }
                         } else {
@@ -145,7 +143,7 @@ module.exports = {
                     } else {
                         // Send user back to authentication intent
                         let followupEvent = {
-                            name: 'authenticate'
+                            name: 'reauthenticate'
                         };
     
                         commonServices.SendResponse(res, '', null, followupEvent);
@@ -211,7 +209,9 @@ module.exports = {
                     commonServices.SendToAuthentication(res, userPolicyNumber, 'getpolicydetails');
                 }
 
-            } else if(result.action == 'get') {
+            } else if(result.action == 'getlastinstalment') {
+                commonServices.SendResponse(res, SPEECH.default);
+            } else if(result.action == 'getpolicystartdate') {
                 commonServices.SendResponse(res, SPEECH.default);
             } else {
                 commonServices.SendResponse(res, SPEECH.default);

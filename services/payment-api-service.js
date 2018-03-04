@@ -158,9 +158,10 @@ module.exports = {
             else if(result.action == 'getpolicydetails') {
 
                 let sessionPolicyNumber = commonServices.FindSessionPolicyNumber(result);
+                let userPolicyNumber = result.parameters && result.parameters.pnumgetpolicydetails;
 
                 // User is already logged in
-                if(sessionPolicyNumber) {
+                if(sessionPolicyNumber && (sessionPolicyNumber != userPolicyNumber)) {
                     // Fetch policy details for user
                     let url = turboAPIBaseURL + 'Chatbot/GetPolicyDetails?PolicyNumber=' + sessionPolicyNumber;
                     nodeRestClient.get(url, function (data, response) {
@@ -197,11 +198,14 @@ module.exports = {
                 else  {
                     // Send user back to authentication intent
                     let followupEvent = {
-                        name: 'authenticate',
-                        data: {
-                            policynumber: result.parameters.pnumgetpolicydetails
-                        }
+                        name: 'authenticate'
                     };
+
+                    if(userPolicyNumber) {
+                        followupEvent.data = {
+                            policynumber: userPolicyNumber
+                        }
+                    }
 
                     // Send last event details
                     let contextOut = [

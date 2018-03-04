@@ -18,7 +18,8 @@ module.exports = {
             otpMailed: 'Please enter the one time password emailed to you at: ',
             correctOtp: 'Your OTP has been verified.',
             wrongOtp: 'The password you entered is incorrect. Please enter again.',
-            OTPError: 'I am not able to fetch any information currently because of a system error. Please try again.'
+            OTPError: 'I am not able to fetch any information currently because of a system error. Please try again.',
+            Fallback: 'I didn\'t get that. Can you come again?'
         };
 
         if(result) {
@@ -109,6 +110,12 @@ module.exports = {
 
             else if(result.action == 'authenticate.verifyotp' || result.action == 'reauthenticate.verifyotp') {
                 if(params['userotp']) {
+
+                    // Temporary fix for incorrect intent
+                    if(params['userotp'].split(' ').length > 1) {
+                        commonServices.SendResponse(res, SPEECH.Fallback);
+                    }
+
                     // Find OTP context
                     let otpContext = commonServices.FindContext(result, 'otp');
         

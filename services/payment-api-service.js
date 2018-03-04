@@ -134,7 +134,7 @@ module.exports = {
                                 let followupEvent = {
                                     name: lastEventContext.parameters.eventname
                                 };
-                                
+
                                 commonServices.SendResponse(res, '', contextOut, followupEvent);
                             }
                         } else {
@@ -142,11 +142,7 @@ module.exports = {
                         }
                     } else {
                         // Send user back to authentication intent
-                        let followupEvent = {
-                            name: 'reauthenticate'
-                        };
-    
-                        commonServices.SendResponse(res, '', null, followupEvent);
+                        commonServices.SendResponse(res, '', null, { name: 'reauthenticate'});
                     }
                 }
             }
@@ -196,10 +192,12 @@ module.exports = {
                                 commonServices.SendResponse(res, speech);
         
                             } else {
-                                commonServices.SendResponse(res, SPEECH.policyNotFound);
+                                // Send user back to authentication intent
+                                commonServices.SendResponse(res, '', null, { name: 'reauthenticate'});
                             }
                         } else {
-                            commonServices.SendResponse(res, SPEECH.policyNotFound);               
+                            // Send user back to authentication intent
+                            commonServices.SendResponse(res, '', null, { name: 'reauthenticate'});               
                         }
                     });            
                 }

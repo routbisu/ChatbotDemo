@@ -256,7 +256,7 @@ module.exports = {
                 // User is not yet logged in 
                 else  {
                     // Send user back to authentication intent
-                    commonServices.SendToAuthentication(res, userPolicyNumber, 'getpolicydetails');
+                    commonServices.SendToAuthentication(res, userPolicyNumber, 'gettotalpaid');
                 }
 
             } else if(result.action == 'getpolicyenddate') {
@@ -308,7 +308,7 @@ module.exports = {
                 // User is not yet logged in 
                 else  {
                     // Send user back to authentication intent
-                    commonServices.SendToAuthentication(res, userPolicyNumber, 'getpolicydetails');
+                    commonServices.SendToAuthentication(res, userPolicyNumber, 'getpolicyenddate');
                 }
 
             } else {

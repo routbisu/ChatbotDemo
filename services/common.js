@@ -99,7 +99,7 @@ module.exports = {
             }
         ];
 
-        commonServices.SendResponse(res, '', contextOut, followupEvent);
+        this.SendResponse(res, '', contextOut, followupEvent);
     }
 
 }

@@ -62,6 +62,9 @@ module.exports = {
                             };
         
                             nodeRestClient.post(otpUrl, args, function (data, response) {
+
+                                log.Debug(data, 'PaymentAPI', 'Send OTP - Response');
+
                                 if(data) {
                                     log.Debug(data, 'PaymentAPI', 'Send OTP');
         

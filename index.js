@@ -38,8 +38,15 @@ try {
   
   app.use(enableCORS);
 
+  // Main controller for landing page
+  app.get("/", function(req, res) {
+    let html = '<h3>Welcome to Turbo Chatbot Webhook</h3>'
+    html += '<p>Please make a post request to http://turbobot.baadi.in/</p>';
+    res.send(html);
+  });
+
   // Main Webhook controller
-  app.post("/turbo", function(req, res) {
+  app.post("/", function(req, res) {
 
     // Get posted json body from Dialogflow
     let result = req && req.body && req.body.result;

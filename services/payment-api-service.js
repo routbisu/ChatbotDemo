@@ -19,7 +19,8 @@ module.exports = {
             correctOtp: 'Your OTP has been verified.',
             wrongOtp: 'The password you entered is incorrect. Please enter again.',
             OTPError: 'I am not able to fetch any information currently because of a system error. Please try again.',
-            Fallback: 'I didn\'t get that. Can you come again?'
+            Fallback: 'I didn\'t get that. Can you come again?',
+            AnythingElse: ' Is there anything else I can help you with?'
         };
 
         if(result) {
@@ -169,7 +170,10 @@ module.exports = {
                             } else {
                                 // Incorrect policy number, please try again
                                 let followupEvent = {
-                                    name: 'reauthenticate'
+                                    name: 'reauthenticate',
+                                    data: {
+                                        policynumber: ''
+                                    }
                                 };
             
                                 commonServices.SendResponse(res, '', null, followupEvent);

@@ -140,20 +140,20 @@ module.exports = {
                                         if(data.Error == 0) {
                                             
                                             // Send a validated authentication context
-                                            let contextOut = [
-                                                {
-                                                    name: "otp", 
-                                                    lifespan: 500, 
-                                                    parameters : 
-                                                    { 
-                                                        serverotp: data.EncryptedOTP,
-                                                        policynumber: args.data.PolicyNumber 
-                                                    }
-                                                }
-                                            ];
+                                            // let contextOut = [
+                                            //     {
+                                            //         name: "otp", 
+                                            //         lifespan: 500, 
+                                            //         parameters : 
+                                            //         { 
+                                            //             serverotp: data.EncryptedOTP,
+                                            //             policynumber: args.data.PolicyNumber 
+                                            //         }
+                                            //     }
+                                            // ];
             
-                                            let speech = SPEECH.otpMailed + args.data.Email;
-                                            commonServices.SendResponse(res, speech, contextOut);
+                                            // let speech = SPEECH.otpMailed + args.data.Email;
+                                            // commonServices.SendResponse(res, speech, contextOut);
                                         
                                         } else {
                                             // OTP could not be sent. Try again   

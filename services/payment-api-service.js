@@ -31,7 +31,7 @@ module.exports = {
                 
 
                 // Check policy number
-                if(params['policynumber']) {
+                if(params['policynumber'] && params['policynumber'] != '') {
 
                     // If OTP is already sent
                     if(params['userotp']) {

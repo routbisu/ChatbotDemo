@@ -32,130 +32,199 @@ module.exports = {
                 // Check policy number
                 if(params['policynumber']) {
 
-                    let url = turboAPIBaseURL + 'Chatbot/GetCustomerDetails?PolicyNumber=' 
-                        + params['policynumber'];
+                    // If OTP is already sent
+                    if(params['userotp']) {
+                        // Verify whether the OTP is correct.
+                        let otpUrl = turboAPIBaseURL + 'Chatbot/VerifyOTP';
         
-                    nodeRestClient.get(url, function (data, response) {
+                        let args = {
+                            data: {
+                                OTP: params['userotp'],
+                                PolicyNumber: params['policynumber']
+                            },
+                            headers: { "Content-Type": "application/json" }
+                        };
         
-                        log.Debug(data, 'PaymentAPI', 'Check policy number');
-        
-                        let validPolicy = false;
-                        if(data) {
-                            if(data.Error == 0) {
-                                if(data.Email) {
-                                    validPolicy = true;
-                                }
-                            }
-                        }
-        
-                        if(validPolicy) {
-                            // Send OTP  
-                            let otpUrl = turboAPIBaseURL + 'Chatbot/SendOTP';
-        
-                            let args = {
-                                data: {
-                                    Name: data.Name,
-                                    Email: data.Email,
-                                    PolicyNumber: data.PolicyNumber
-                                },
-                                headers: { "Content-Type": "application/json" }
-                            };
-        
-                            nodeRestClient.post(otpUrl, args, function (data, response) {
+                        nodeRestClient.post(otpUrl, args, function (data, response) {
 
-                                log.Debug(data, 'PaymentAPI', 'Send OTP - Response');
-
-                                if(data) {
-                                    log.Debug(data, 'PaymentAPI', 'Send OTP');
+                            if(data) {
+                                log.Debug(data, 'PaymentAPI', 'Verify OTP');
         
-                                    if(data.Error == 0) {
-                                        
-                                        // Send a validated authentication context
+                                if(data.Error == 0) {
+
+                                    // If OTP is valid
+                                    if(data.Valid) {
                                         let contextOut = [
                                             {
-                                                name: "otp", 
+                                                name: "sessioninfo", 
                                                 lifespan: 500, 
                                                 parameters : 
                                                 { 
-                                                    serverotp: data.EncryptedOTP,
-                                                    policynumber: args.data.PolicyNumber 
+                                                    sessionPolicyNumber: params['policynumber']
                                                 }
+                                            },
+                                        ]
+                
+                                        // Check last event details
+                                        let lastEventContext = commonServices.FindContext(result, 'lastevent');
+                                        if(lastEventContext) {
+                                            // Send user to the last event
+                                            let followupEvent = {
+                                                name: lastEventContext.parameters.eventname
+                                            };
+            
+                                            commonServices.SendResponse(res, '', contextOut, followupEvent);
+                                        } else {
+                                            commonServices.SendResponse(res, 'Your OTP has been verified.', contextOut);
+                                        }
+                                    } else {
+
+                                        // If OTP is invalid
+                                        let followupEvent = {
+                                            name: 'reauthenticate',
+                                            data: {
+                                                policynumber: params['policynumber']
                                             }
-                                        ];
+                                        };
         
-                                        let speech = SPEECH.otpMailed + args.data.Email;
-                                        commonServices.SendResponse(res, speech, contextOut);
-                                    
+                                        commonServices.SendResponse(res, '', null, followupEvent);
+                                    }                                    
+
+                                } else {
+                                    // OTP could not be sent. Try again   
+                                    log.Error('OTP Error', 'PaymentAPI', 'Verify OTP', data);  
+                                    commonServices.SendResponse(res, SPEECH.OTPError);
+                                }
+                            }
+                        });
+
+                    } else {
+                        // If OTP is not sent, then send OTP
+
+                        let url = turboAPIBaseURL + 'Chatbot/GetCustomerDetails?PolicyNumber=' 
+                        + params['policynumber'];
+        
+                        nodeRestClient.get(url, function (data, response) {
+            
+                            log.Debug(data, 'PaymentAPI', 'Check policy number');
+            
+                            let validPolicy = false;
+                            if(data) {
+                                if(data.Error == 0) {
+                                    if(data.Email) {
+                                        validPolicy = true;
+                                    }
+                                }
+                            }
+            
+                            if(validPolicy) {
+                                // Send OTP  
+                                let otpUrl = turboAPIBaseURL + 'Chatbot/SendOTP';
+            
+                                let args = {
+                                    data: {
+                                        Name: data.Name,
+                                        Email: data.Email,
+                                        PolicyNumber: data.PolicyNumber
+                                    },
+                                    headers: { "Content-Type": "application/json" }
+                                };
+            
+                                nodeRestClient.post(otpUrl, args, function (data, response) {
+
+                                    log.Debug(data, 'PaymentAPI', 'Send OTP - Response');
+
+                                    if(data) {
+                                        log.Debug(data, 'PaymentAPI', 'Send OTP');
+            
+                                        if(data.Error == 0) {
+                                            
+                                            // Send a validated authentication context
+                                            let contextOut = [
+                                                {
+                                                    name: "otp", 
+                                                    lifespan: 500, 
+                                                    parameters : 
+                                                    { 
+                                                        serverotp: data.EncryptedOTP,
+                                                        policynumber: args.data.PolicyNumber 
+                                                    }
+                                                }
+                                            ];
+            
+                                            let speech = SPEECH.otpMailed + args.data.Email;
+                                            commonServices.SendResponse(res, speech, contextOut);
+                                        
+                                        } else {
+                                            // OTP could not be sent. Try again   
+                                            log.Error('OTP Error', 'PaymentAPI', 'Send OTP', data);  
+                                            commonServices.SendResponse(res, SPEECH.OTPError);
+                                        }
                                     } else {
                                         // OTP could not be sent. Try again   
                                         log.Error('OTP Error', 'PaymentAPI', 'Send OTP', data);  
                                         commonServices.SendResponse(res, SPEECH.OTPError);
                                     }
-                                } else {
-                                    // OTP could not be sent. Try again   
-                                    log.Error('OTP Error', 'PaymentAPI', 'Send OTP', data);  
-                                    commonServices.SendResponse(res, SPEECH.OTPError);
-                                }
-                            });
-                        } else {
-                            // Incorrect policy number, please try again
-                            let followupEvent = {
-                                name: 'reauthenticate'
-                            };
-        
-                            commonServices.SendResponse(res, '', null, followupEvent);
-                        }
-                    });
-        
+                                });
+                            } else {
+                                // Incorrect policy number, please try again
+                                let followupEvent = {
+                                    name: 'reauthenticate'
+                                };
+            
+                                commonServices.SendResponse(res, '', null, followupEvent);
+                            }
+                        });
+                    }        
                 } 
                 
             } 
 
-            else if(result.action == 'authenticate.verifyotp' || result.action == 'reauthenticate.verifyotp') {
-                if(params['userotp']) {
+            // else if(result.action == 'authenticate.verifyotp' || result.action == 'reauthenticate.verifyotp') {
+            //     if(params['userotp']) {
 
-                    // Temporary fix for incorrect intent
-                    if(params['userotp'].split(' ').length > 1) {
-                        commonServices.SendResponse(res, SPEECH.Fallback);
-                    }
+            //         // Temporary fix for incorrect intent
+            //         if(params['userotp'].split(' ').length > 1) {
+            //             commonServices.SendResponse(res, SPEECH.Fallback);
+            //         }
 
-                    // Find OTP context
-                    let otpContext = commonServices.FindContext(result, 'otp');
+            //         // Find OTP context
+            //         let otpContext = commonServices.FindContext(result, 'otp');
         
-                    // If OTP matches with the one entered by user
-                    if(otpContext) {
-                        if(otpContext.parameters.serverotp.toLowerCase() === params['userotp'].toLowerCase()) {
+            //         // If OTP matches with the one entered by user
+            //         if(otpContext) {
+            //             if(otpContext.parameters.serverotp.toLowerCase() === params['userotp'].toLowerCase()) {
     
-                            let contextOut = [
-                                {
-                                    name: "sessioninfo", 
-                                    lifespan: 500, 
-                                    parameters : 
-                                    { 
-                                        sessionPolicyNumber: otpContext.parameters.policynumber
-                                    }
-                                },
-                            ]
+            //                 let contextOut = [
+            //                     {
+            //                         name: "sessioninfo", 
+            //                         lifespan: 500, 
+            //                         parameters : 
+            //                         { 
+            //                             sessionPolicyNumber: otpContext.parameters.policynumber
+            //                         }
+            //                     },
+            //                 ]
     
-                            // Check last event details
-                            let lastEventContext = commonServices.FindContext(result, 'lastevent');
-                            if(lastEventContext) {
-                                // Send user to the last event
-                                let followupEvent = {
-                                    name: lastEventContext.parameters.eventname
-                                };
+            //                 // Check last event details
+            //                 let lastEventContext = commonServices.FindContext(result, 'lastevent');
+            //                 if(lastEventContext) {
+            //                     // Send user to the last event
+            //                     let followupEvent = {
+            //                         name: lastEventContext.parameters.eventname
+            //                     };
 
-                                commonServices.SendResponse(res, '', contextOut, followupEvent);
-                            }
-                        } else {
-                            commonServices.SendResponse(res, SPEECH.wrongOtp);
-                        }
-                    } else {
-                        // Send user back to authentication intent
-                        commonServices.SendResponse(res, '', null, { name: 'reauthenticate'});
-                    }
-                }
-            }
+            //                     commonServices.SendResponse(res, '', contextOut, followupEvent);
+            //                 }
+            //             } else {
+            //                 commonServices.SendResponse(res, SPEECH.wrongOtp);
+            //             }
+            //         } else {
+            //             // Send user back to authentication intent
+            //             commonServices.SendResponse(res, '', null, { name: 'reauthenticate'});
+            //         }
+            //     }
+            // }
             
 
             // Policydetails action

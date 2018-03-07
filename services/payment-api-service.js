@@ -27,12 +27,12 @@ module.exports = {
             // Authentication action
             let params = result.parameters;
 
-            if(result.action == 'authenticate' || result.action == 'reauthenticate' || result.action == 'reauthenticate2') {
+            if(result.action == 'authenticate' || result.action == 'reauthenticate') {
                 
                 console.log(result);
 
                 // Check policy number
-                if(params['policynumber'] && params['policynumber'] != 'INVALID') {
+                if(params['policynumber']) {
 
                     // If OTP is already sent
                     if(params['userotp']) {

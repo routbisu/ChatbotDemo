@@ -173,12 +173,23 @@ module.exports = {
                                 let followupEvent = {
                                     name: 'reauthenticate',
                                     data: {
-                                        policynumber: null
+                                        policynumber: ''
                                     }
                                     // name: (result.action == 'reauthenticate') ? 'reauthenticate2' : 'reauthenticate'
                                 };
+
+                                let contextOut = [
+                                    {
+                                        name: "reauthentication", 
+                                        lifespan: 500, 
+                                        parameters : 
+                                        { 
+                                            policynumber: ''
+                                        }
+                                    }
+                                ];
             
-                                commonServices.SendResponse(res, '', null, followupEvent);
+                                commonServices.SendResponse(res, '', contextOut, followupEvent);
                             }
                         });
                     }        

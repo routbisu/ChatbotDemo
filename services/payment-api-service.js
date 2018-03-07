@@ -171,25 +171,10 @@ module.exports = {
                             } else {
                                 // Incorrect policy number, please try again
                                 let followupEvent = {
-                                    name: 'reauthenticate',
-                                    data: {
-                                        policynumber: ''
-                                    }
-                                    // name: (result.action == 'reauthenticate') ? 'reauthenticate2' : 'reauthenticate'
+                                    name: (result.action == 'reauthenticate') ? 'endconversation' : 'reauthenticate'
                                 };
-
-                                let contextOut = [
-                                    {
-                                        name: "reauthentication", 
-                                        lifespan: 500, 
-                                        parameters : 
-                                        { 
-                                            policynumber: ''
-                                        }
-                                    }
-                                ];
             
-                                commonServices.SendResponse(res, '', contextOut, followupEvent);
+                                commonServices.SendResponse(res, '', null, followupEvent);
                             }
                         });
                     }        

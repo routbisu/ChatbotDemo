@@ -140,22 +140,8 @@ module.exports = {
                                         log.Debug(data, 'PaymentAPI', 'Send OTP');
             
                                         if(data.Error == 0) {
-                                            
-                                            // Send a validated authentication context
-                                            // let contextOut = [
-                                            //     {
-                                            //         name: "otp", 
-                                            //         lifespan: 500, 
-                                            //         parameters : 
-                                            //         { 
-                                            //             serverotp: data.EncryptedOTP,
-                                            //             policynumber: args.data.PolicyNumber 
-                                            //         }
-                                            //     }
-                                            // ];
-            
-                                            // let speech = SPEECH.otpMailed + args.data.Email;
-                                            // commonServices.SendResponse(res, speech, contextOut);
+
+                                            commonServices.SendResponse(res, '');
                                         
                                         } else {
                                             // OTP could not be sent. Try again   

@@ -173,7 +173,7 @@ module.exports = {
                                 let followupEvent = {
                                     name: 'reauthenticate',
                                     data: {
-                                        policynumber: 'INVALID'
+                                        policynumber: null
                                     }
                                     // name: (result.action == 'reauthenticate') ? 'reauthenticate2' : 'reauthenticate'
                                 };

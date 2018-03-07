@@ -27,7 +27,7 @@ module.exports = {
             // Authentication action
             let params = result.parameters;
 
-            if(result.action == 'authenticate' || result.action == 'reauthenticate') {
+            if(result.action == 'authenticate' || result.action == 'reauthenticate' || result.action == 'reauthenticate2') {
                 
 
                 // Check policy number
@@ -170,10 +170,7 @@ module.exports = {
                             } else {
                                 // Incorrect policy number, please try again
                                 let followupEvent = {
-                                    name: 'reauthenticate',
-                                    data: {
-                                        policynumber: ''
-                                    }
+                                    name: (result.action == 'reauthenticate') ? 'reauthenticate2' : 'reauthenticate'
                                 };
             
                                 commonServices.SendResponse(res, '', null, followupEvent);

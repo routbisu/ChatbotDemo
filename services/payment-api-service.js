@@ -20,7 +20,10 @@ module.exports = {
             wrongOtp: 'The password you entered is incorrect. Please enter again.',
             OTPError: 'I am not able to fetch any information currently because of a system error. Please try again.',
             Fallback: 'I didn\'t get that. Can you come again?',
-            AnythingElse: ' Is there anything else I can help you with?'
+            AnythingElse: ' Is there anything else I can help you with?',
+            SessionExpired: 'Because of incorrect inputs, your session has been expired and the conversation is now closed. Please start a new conversation.',
+            SessionExpiredPolicyNumber: 'You have exceeded the maximum number of trials for entering the policy number. The conversation is now closed. Please start a new conversation',
+            SessionExpiredOTP: 'You have exceeded the maximum number of trials for entering the one time password. The conversation is now closed. Please start a new conversation'            
         };
 
         if(result) {
@@ -157,7 +160,10 @@ module.exports = {
                             } else {
                                 // Incorrect policy number, please try again
                                 let followupEvent = {
-                                    name: (result.action == 'reauthenticate') ? 'endconversation' : 'reauthenticate'
+                                    name: (result.action == 'reauthenticate') ? 'endconversation' : 'reauthenticate',
+                                    data: {
+                                        errortype: 'policynumber'
+                                    }
                                 };
             
                                 commonServices.SendResponse(res, '', null, followupEvent);
@@ -378,6 +384,18 @@ module.exports = {
                     commonServices.SendToAuthentication(res, userPolicyNumber, 'getpolicyenddate');
                 }
 
+            
+            
+            } else if(result.action == 'endconversation') {
+                // This event is fired when incorrect policy number or OTP is entered too many times
+                if(params['errortype']) {
+                    if(params['errortype'] == 'policynumber')
+                        commonServices.SendResponse(res, SPEECH.SessionExpiredPolicyNumber);
+                    else if(params['errortype'] == 'otp')
+                        commonServices.SendResponse(res, SPEECH.SessionExpiredOTP);
+                } else {
+                    commonServices.SendResponse(res, SPEECH.SessionExpired);
+                }
             } else {
                 commonServices.SendResponse(res, SPEECH.default);
             }

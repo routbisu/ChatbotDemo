@@ -15,7 +15,7 @@ module.exports = {
         let SPEECH = {
             default: 'I am not able to find the information currently. Please try again.',
             policyNotFound: 'I was not able to find any data for this policy number. Please try again.',
-            otpMailed: 'Please enter the one time password emailed to you at: ',
+            otpMailed: 'Please enter the one time password emailed to you.',
             correctOtp: 'Your OTP has been verified.',
             wrongOtp: 'The password you entered is incorrect. Please enter again.',
             OTPError: 'I am not able to fetch any information currently because of a system error. Please try again.',
@@ -144,7 +144,7 @@ module.exports = {
             
                                         if(data.Error == 0) {
 
-                                            commonServices.SendResponse(res, '');
+                                            commonServices.SendResponse(res, SPEECH.otpMailed);
                                         
                                         } else {
                                             // OTP could not be sent. Try again   
